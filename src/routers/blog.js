@@ -1,10 +1,14 @@
 import express from 'express';
+import auth from '../middleware/auth.js';
 import Blog from '../models/blog.js';
 
 const router = new express.Router()
 
-router.post('/blog', async (req, res) => {
-    const blog = new Blog(req.body)
+router.post('/blog', auth, async (req, res) => {
+    const blog = new Blog({
+        ...req.body,
+        user: req.user._id 
+    })
 
     try{
         await blog.save()
@@ -29,38 +33,30 @@ router.get('/blog/:id', async (req, res) => {
     const _id = req.params.id
     
     try{
-        const blog = await Blog.findOne({
-            _id
-        }) 
+        const blog = await Blog.findOne({_id}) 
         if(!blog){
             res.status(404).send()
         }
-        res.send(blog)
+        await blog.populate({
+            path:'comments'
+        })
+        res.send({blog, Comments:blog.comments})
     }catch(e){
         res.status(500).send(e)
     }
 })
 
 
-router.patch('/blog/:id', async (req, res) => {
+router.patch('/blog/:id',auth, async (req, res) => {
     const _id = req.params.id
-    const updates = Object.keys(req.body)
-    const allowedUpdates = ['Title', 'Body']
-    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
-
-    if (!isValidOperation) {
-        return res.status(400).send({ error: 'Invalid updates!' })
-    }
+    // const updates = Object.keys(req.body)
     
     try{
-        const blog = await Blog.findOne({
-            _id
-        }) 
+        const blog = await Blog.findOneAndUpdate({_id, user:req.user._id}, {...req.body},{new: true})
+
         if(!blog){
-            res.status(404).send()
+            return res.status(404).send("Can not find blog");
         }
-        
-        updates.forEach((update) => blog[update] = req.body[update]);
         await blog.save()
         res.send(blog)
         
@@ -69,15 +65,15 @@ router.patch('/blog/:id', async (req, res) => {
     }
 })
 
-router.delete('/blog/:id', async (req, res) => {
+router.delete('/blog/:id',auth, async (req, res) => {
     const _id = req.params.id
     try{
-        const blog = await Blog.findOneAndDelete({_id})
+        const blog = await Blog.findOneAndDelete({_id,user:req.user._id})
         if(!blog){
-            res.status(404).send()
+            res.status(404).send("can't find Blog")
         }
 
-        res.send(blog)
+        res.send()
     }
     catch(e){
         res.status(500).send(e)
