@@ -4,6 +4,8 @@ import Blog from '../models/blog.js';
 
 const router = new express.Router()
 
+
+//add a blog
 router.post('/blog', auth, async (req, res) => {
     const blog = new Blog({
         ...req.body,
@@ -19,6 +21,7 @@ router.post('/blog', auth, async (req, res) => {
     }
 })
 
+//get all blogs
 router.get('/blog', async(req, res) => {
     const blog = await Blog.find()
     try{
@@ -29,6 +32,8 @@ router.get('/blog', async(req, res) => {
     }
 })
 
+
+//shoe specific blog
 router.get('/blog/:id', async (req, res) => {
     const _id = req.params.id
     
@@ -46,7 +51,7 @@ router.get('/blog/:id', async (req, res) => {
     }
 })
 
-
+//update your own blog
 router.patch('/blog/:id',auth, async (req, res) => {
     const _id = req.params.id
     // const updates = Object.keys(req.body)
@@ -65,6 +70,8 @@ router.patch('/blog/:id',auth, async (req, res) => {
     }
 })
 
+
+//delete your own blog
 router.delete('/blog/:id',auth, async (req, res) => {
     const _id = req.params.id
     try{

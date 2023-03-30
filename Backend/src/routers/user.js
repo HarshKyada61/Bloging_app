@@ -4,7 +4,8 @@ import User from '../models/user.js';
 
 const router = new express.Router()
 
-router.post('/users', async (req, res) => {
+//user Signup
+router.post('/users/signup', async (req, res) => {
     const user = new User(req.body)
 
     try{
@@ -17,6 +18,7 @@ router.post('/users', async (req, res) => {
     }
 })
 
+//user login
 router.post('/user/login', async (req, res) => {
     try{
         const user = await User.findByCredentials(req.body.email, req.body.password);
@@ -27,6 +29,7 @@ router.post('/user/login', async (req, res) => {
     }
 })
 
+//user logout
 router.post('/user/logout', auth, async (req, res) => {
     try{
         req.user.tokens = req.user.tokens.filter((token) => {
@@ -40,6 +43,7 @@ router.post('/user/logout', auth, async (req, res) => {
     }
 })
 
+//user logout from all devices
 router.post('/user/logoutAll', auth, async(req, res) => {
     try{
         req.user.tokens = [];
@@ -51,10 +55,8 @@ router.post('/user/logoutAll', auth, async(req, res) => {
     }
 })
 
-// router.get('/user/me', auth, async (req, res) => {
-//     res.send(req.user)
-// })
 
+//see your profile with your blogs
 router.get('/user/me', auth, async (req, res) => {
     const user = req.user;
     try {
@@ -94,7 +96,7 @@ router.get('/user/me', auth, async (req, res) => {
 //     }
 // })
 
-
+//update your profile
 router.patch('/user/me', auth, async (req, res) => {
     const updates = Object.keys(req.body)
     try{
@@ -108,6 +110,8 @@ router.patch('/user/me', auth, async (req, res) => {
     }
 })
 
+
+//delete your profile
 router.delete('/user/me', auth, async (req, res) => {
     try{
         
