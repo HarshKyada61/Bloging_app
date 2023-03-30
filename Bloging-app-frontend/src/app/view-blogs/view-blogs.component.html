@@ -1,0 +1,15 @@
+<div class="row mt-4">
+    <div class="col-md-11 mx-auto">
+        <div class="card mb-2" *ngFor="let blog of blogs">
+          <a routerLink="/blog/id">
+              <div class="card-header">
+                {{ blog.title }}
+              </div>
+              <div class="card-body">
+                <p>{{ blog.description }}</p>
+              </div>
+          </a>
+        </div>
+    </div>
+</div> 
+

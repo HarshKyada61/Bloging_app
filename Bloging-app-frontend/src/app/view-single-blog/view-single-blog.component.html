@@ -1,0 +1,21 @@
+<div class="row mt-4">
+  <div class="col-md-11 mx-auto">
+    <div class="card mb-2">
+      <div class="card-header">
+        <h2>{{ blog.title }}</h2>
+      </div>
+      <div class="card-body">
+        <p>{{ blog.body }}</p>
+      </div>
+      <div class="card-footer">
+        <h4>comments</h4>
+
+        <div class="card m-2" *ngFor="let comment of blog.comments">
+          <div class="card-body">
+            <p>{{ comment.comment }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
