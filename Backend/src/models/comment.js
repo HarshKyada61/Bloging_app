@@ -21,6 +21,19 @@ const commentSchema = new mongoose.Schema({
     timestamps: true
 })
 
+
+commentSchema.methods.toJSON = function () {
+    const comment = this
+    const commentObject = comment.toObject()
+
+    delete commentObject.user
+    delete commentObject.blog
+    delete commentObject.createdAt
+    delete commentObject.updatedAt
+    delete commentObject.__v
+
+    return commentObject
+}
 const Comment = mongoose.model('Comment', commentSchema)
 
 export default Comment;

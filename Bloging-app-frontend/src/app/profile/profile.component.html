@@ -1,22 +1,22 @@
 <div class="container my-5">
     <div class="row justify-content-center align-items-center">
       <div class="col-md-8">
-        <h2>{{user.userName}}</h2>
+        <h2>{{user.name}}</h2>
         <p class="text-muted">{{user.email}}</p>
         <div class="actions mb-3">
-          <button class="btn btn-outline-primary me-2">Update Profile</button>
-          <button class="btn btn-outline-danger me-2">Delete Profile</button>
+          <button class="btn btn-outline-primary me-2" >Update Profile</button>
+          <button class="btn btn-outline-danger me-2" type="button" (click)="onDelete()">Delete Profile</button>
         </div>
         <h3>Blogs</h3>
         <div class="row mt-3">
           <div class="col-md-11 mx-auto">
             <div class="card mb-2" *ngFor="let blog of blogs">
-              <a routerLink="/blog/id" style="text-decoration: none; color: black;">
+              <a routerLink="/blog/{{blog._id}}" style="text-decoration: none; color: black;">
                 <div class="card-header">
-                  <h3>{{blog.title}}</h3>
+                  <h3>{{blog.Title}}</h3>
                 </div>
                 <div class="card-body">
-                  <p>{{blog.description}}</p>
+                  <p>{{blog.Body}}</p>
                 </div>
               </a>
             </div>

@@ -13,7 +13,7 @@ router.post('/comment', auth, async (req, res) => {
     })
     try{
         await comment.save()
-        res.status(201).send(comment)
+        res.status(201).send()
     }catch(e){
         res.status(400).send(e)
     }

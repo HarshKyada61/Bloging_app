@@ -11,7 +11,7 @@ router.post('/users/signup', async (req, res) => {
     try{
         await user.save();
         const token = await user.generateToken()
-        res.status(201).send({user,token});
+        res.status(201).send({token});
     }
     catch(e){
         res.status(400).send(e)
@@ -23,7 +23,7 @@ router.post('/user/login', async (req, res) => {
     try{
         const user = await User.findByCredentials(req.body.email, req.body.password);
         const token = await user.generateToken()
-        res.send({user, token})
+        res.send({token})
     }catch(e){
         res.status(400).send(e)
     }
@@ -117,7 +117,7 @@ router.delete('/user/me', auth, async (req, res) => {
         
         await User.findByIdAndDelete(req.user._id)
 
-        res.send("deleted successfully")
+        res.status(200).send()
     }
     catch(e){
         res.status(500).send(e)

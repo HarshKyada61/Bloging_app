@@ -2,15 +2,21 @@
   <div class="col-md-11 mx-auto">
     <div class="card mb-2">
       <div class="card-header">
-        <h2>{{ blog.title }}</h2>
+        <h2>{{ blog.Title }}</h2>
       </div>
       <div class="card-body">
-        <p>{{ blog.body }}</p>
+        <p>{{ blog.Body }}</p>
       </div>
-      <div class="card-footer">
-        <h4>comments</h4>
 
-        <div class="card m-2" *ngFor="let comment of blog.comments">
+      <div class="m-2 text-end">
+        <button class="btn btn-primary" type="button" (click)="onAddComment()">Add Comment</button>
+      </div>
+      
+      <app-add-comment *ngIf="canComment" [blogid]="blog._id"></app-add-comment>
+      
+      <div class="card-footer" *ngIf="comments !== undefined && comments.length > 0">
+        <h4>comments</h4>
+        <div class="card m-2" *ngFor="let comment of comments">
           <div class="card-body">
             <p>{{ comment.comment }}</p>
           </div>

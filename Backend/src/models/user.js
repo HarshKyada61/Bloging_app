@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
 import jwt from 'jsonwebtoken';
+import Blog from './blog.js';
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -49,6 +50,9 @@ userSchema.methods.toJSON = function () {
 
     delete userObject.password
     delete userObject.tokens
+    delete userObject.createdAt
+    delete userObject.updatedAt
+    delete userObject.__v
 
     return userObject
 }
@@ -80,6 +84,14 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
 }
 
+userSchema.pre('findByIdAndDelete',{query:true, document:false}, async function (next) {
+    // console.log("somethinfgdbfgsdfbn");
+    const user = this
+    console.log(user);
+    await Blog.deleteMany({ user: user._id })
+    await Comment.deleteMany({user: user._id})
+    next()
+})
 
 const User =  mongoose.model('User', userSchema)
 

@@ -1,28 +1,46 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { DataStorageService } from '../shared/data-handler.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-view-single-blog',
   templateUrl: './view-single-blog.component.html',
   styleUrls: ['./view-single-blog.component.css'],
 })
-export class ViewSingleBlogComponent {
-  blog = {
-    title: 'This is My First Blog',
-    body: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatem provident asperiores veritatis repudiandae, optio explicabo vel iure excepturi natus consequatur, velit cumque blanditiis itaque exercitationem qui in error doloribus laboriosam voluptas ratione! Nobis ea, quisquam rerum dolore eligendi modi sed, iste voluptate deleniti maiores fugiat. Ipsa necessitatibus natus doloribus quia minus libero nisi maiores iure optio veniam ex exercitationem esse nihil culpa, blanditiis aspernatur recusandae ad ea! Sequi repellat nesciunt magnam impedit totam officia ad. Libero quisquam facere eveniet, accusantium tenetur vel harum molestiae soluta cupiditate corporis ipsa inventore a reprehenderit alias, quas, accusamus ex quae amet repudiandae id! Atque.',
-    comments: [{
-      comment: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sit, sint!"
-    },
-    {
-      comment: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sit, sint!"
-    },
-    {
-      comment: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sit, sint!"
-    },
-    {
-      comment: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sit, sint!"
-    },
-    {
-      comment: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sit, sint!"
-    }]
+export class ViewSingleBlogComponent implements OnInit,OnDestroy{
+  blog={
+    Title:'',
+    Body:'',
+    _id:''
   };
+  comments:any
+  canComment:Boolean;
+  
+  
+  blogSub: Subscription;
+  constructor(private route: ActivatedRoute, public dataHandler: DataStorageService){}
+
+
+  ngOnInit(){
+    const id = this.route.snapshot.paramMap.get('id');
+    this.blogSub = this.dataHandler.fetchBlog(id).subscribe((data:any) => {
+      
+      this.blog = data.blog;
+      this.comments = data.comments
+    
+
+    });
+    this.dataHandler.canComment.subscribe(permission => {
+      this.canComment = permission
+    })
+  }
+
+  onAddComment(){
+    this.dataHandler.canComment.next(!this.canComment);
+  }
+
+  ngOnDestroy() {
+    this.blogSub.unsubscribe()
+  }
 }

@@ -9,6 +9,9 @@ import { ViewSingleBlogComponent } from './view-single-blog/view-single-blog.com
 import { ProfileComponent } from './profile/profile.component';
 import { AuthComponent } from './auth/auth.component';
 import { FormsModule } from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
+import { AddBlogComponent } from './add-blog/add-blog.component';
+import { AddCommentComponent } from './view-single-blog/add-comment/add-comment.component'
 
 @NgModule({
   declarations: [
@@ -17,12 +20,15 @@ import { FormsModule } from '@angular/forms';
     HeaderComponent,
     ViewSingleBlogComponent,
     ProfileComponent,
-    AuthComponent
+    AuthComponent,
+    AddBlogComponent,
+    AddCommentComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

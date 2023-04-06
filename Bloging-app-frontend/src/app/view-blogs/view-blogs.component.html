@@ -1,15 +1,20 @@
 <div class="row mt-4">
     <div class="col-md-11 mx-auto">
-        <div class="card mb-2" *ngFor="let blog of blogs">
-          <a routerLink="/blog/id">
-              <div class="card-header">
-                {{ blog.title }}
-              </div>
-              <div class="card-body">
-                <p>{{ blog.description }}</p>
-              </div>
-          </a>
+        <div *ngIf="blogs !== undefined && blogs.length > 0; else elseBlock">
+          <div class="card mb-2" *ngFor="let blog of blogs">
+            <a routerLink="/blog/{{blog._id}}">
+                <div class="card-header">
+                  {{ blog.Title }}
+                </div>
+                <div class="card-body">
+                  <p>{{ blog.Body}}</p>
+                </div>
+            </a>
+          </div>
         </div>
+        <ng-template #elseBlock>
+          No Blogs Found
+        </ng-template>
     </div>
 </div> 
 

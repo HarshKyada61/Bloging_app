@@ -1,0 +1,10 @@
+<div class="card m-2">
+  <form #form="ngForm">
+    <input type="text" class="card-body" ngModel name="comment"/>
+    <div class="card-footer text-end">
+      <button class="btn btn-primary" type="button" (click)="addComment()">
+        Add
+      </button>
+    </div>
+  </form>
+</div>

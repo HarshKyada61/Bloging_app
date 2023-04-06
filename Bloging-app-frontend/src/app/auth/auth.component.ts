@@ -1,21 +1,69 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DataStorageService } from '../shared/data-handler.service';
+import { catchError, of, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
-  styleUrls: ['./auth.component.css']
+  styleUrls: ['./auth.component.css'],
 })
 export class AuthComponent {
-  isLoginMode = true
+  @ViewChild('form') authForm: NgForm;
+  isLoginMode = true;
+  isLoggedin = false;
+  token=null;
+  // user = {
+  //   name: "",
+  //   email: "",
+  //   password: "",
+  // }
 
-  constructor(private router:Router){}
+  constructor(private router: Router, public dataHandler: DataStorageService) {}
 
-  onSwitchMode(){
-    this.isLoginMode = !this.isLoginMode
-  }  
+  onSwitchMode() {
+    this.isLoginMode = !this.isLoginMode;
+  }
 
-  onSubmit(){
-    this.router.navigate(['/']);
+  onSubmit() {
+    event?.preventDefault()
+    const user = this.authForm.form.value;
+    if (this.isLoginMode) {
+      this.dataHandler.login(user).subscribe(
+        (token: any) => {
+          this.token = token.token;
+          console.log('login Successfully');
+          if (this.token) {
+            this.storeToken()
+          }
+        },
+        (err) => {
+          alert("can't login");
+        },
+      );
+    } else {
+      this.dataHandler.signup(user).subscribe(
+        (token: any) => {
+          console.log(token);
+          
+          this.token = token.token;
+          console.log('signup successfully');
+          if (this.token) {
+           this.storeToken()
+          }
+        },
+        (err) => {
+          alert("Can't Signup");
+        },
+      );
+    }
+  }
+
+  storeToken(){
+    this.dataHandler.isAuthenticated.next(true);
+    this.isLoggedin = true;
+    this.router.navigate(['/'])
+    localStorage.setItem('token', 'Bearer '+this.token);
   }
 }

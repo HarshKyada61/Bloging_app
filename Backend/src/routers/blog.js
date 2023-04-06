@@ -33,7 +33,7 @@ router.get('/blog', async(req, res) => {
 })
 
 
-//shoe specific blog
+//show specific blog
 router.get('/blog/:id', async (req, res) => {
     const _id = req.params.id
     
@@ -45,7 +45,7 @@ router.get('/blog/:id', async (req, res) => {
         await blog.populate({
             path:'comments'
         })
-        res.send({blog, Comments:blog.comments})
+        res.send({blog, comments:blog.comments})
     }catch(e){
         res.status(500).send(e)
     }
@@ -86,6 +86,23 @@ router.delete('/blog/:id',auth, async (req, res) => {
         res.status(500).send(e)
     }
 })
+
+router.delete('/blogs',auth, async (req, res) => {
+    const _id = req.params.id
+    try{
+        const blog = await Blog.deleteMany({user:req.user._id})
+        if(!blog){
+            res.status(404).send("can't find Blog")
+        }
+
+        res.send("deleted all blogs")
+    }
+    catch(e){
+        res.status(500).send(e)
+    }
+})
+
+
 
 
 
