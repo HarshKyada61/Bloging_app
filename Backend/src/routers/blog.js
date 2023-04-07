@@ -63,7 +63,7 @@ router.patch('/blog/:id',auth, async (req, res) => {
             return res.status(404).send("Can not find blog");
         }
         await blog.save()
-        res.send(blog)
+        res.status(200).send(blog)
         
     }catch(e){
         res.status(400).send(e)

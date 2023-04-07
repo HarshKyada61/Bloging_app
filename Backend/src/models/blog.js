@@ -29,7 +29,6 @@ blogSchema.methods.toJSON = function () {
     const blog = this
     const blogObject = blog.toObject()
 
-    delete blogObject.user
     delete blogObject.createdAt
     delete blogObject.updatedAt
     delete blogObject.__v

@@ -26,7 +26,6 @@ commentSchema.methods.toJSON = function () {
     const comment = this
     const commentObject = comment.toObject()
 
-    delete commentObject.user
     delete commentObject.blog
     delete commentObject.createdAt
     delete commentObject.updatedAt

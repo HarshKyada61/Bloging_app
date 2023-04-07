@@ -1,12 +1,12 @@
 <nav class="navbar bg-secondary">
     <div class="container-fluid ">
-      <a class="navbar-brand">Blogs</a>
-  
+      <a class="navbar-brand" routerLink="/">Blogs App</a>
+      
       <div class="d-flex">
         <a class="nav-link active m-2" routerLink="/auth" *ngIf="!isAuthenticated">Login</a>
-        <a class="nav-link active m-2" *ngIf="isAuthenticated" type="button" (click)="onLogout()">Logout</a>
-        <a class="nav-link m-2" routerLink="/profile" *ngIf="isAuthenticated">Profile</a>
         <a class="nav-link m-2" routerLink="/blogs/addBlog" *ngIf="isAuthenticated">Add Blog</a>
+        <a class="nav-link m-2" routerLink="/profile" *ngIf="isAuthenticated">Profile</a>
+        <a class="nav-link active m-2" *ngIf="isAuthenticated" type="button" (click)="onLogout()">Logout</a>
       </div>
     </div>
   </nav>

@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import jwt from 'jsonwebtoken';
 import Blog from './blog.js';
+import Comment from './comment.js';
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -84,12 +85,13 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
 }
 
-userSchema.pre('findByIdAndDelete',{query:true, document:false}, async function (next) {
-    // console.log("somethinfgdbfgsdfbn");
-    const user = this
+userSchema.pre('findOneAndDelete', async function (next) {
+    console.log("somethinfgdbfgsdfbn");
+    const user = this._conditions
     console.log(user);
     await Blog.deleteMany({ user: user._id })
     await Comment.deleteMany({user: user._id})
+    console.log("something");    
     next()
 })
 

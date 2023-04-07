@@ -19,8 +19,12 @@ export class HeaderComponent implements OnInit{
   }  
 
   onLogout(){
-    localStorage.removeItem('token')
-    this.dataHandler.isAuthenticated.next(false);
-    this.router.navigate(["/"])
+    this.dataHandler.logout().subscribe(res => {
+      localStorage.removeItem('token')
+      this.dataHandler.loggedinUser = null
+      this.dataHandler.isAuthenticated.next(false);
+      this.router.navigate(["/"])
+    })
+ 
   }
 }

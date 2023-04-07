@@ -37,17 +37,17 @@ router.delete('/comment/:id', auth, async (req, res) => {
 
         const comment = await Comment.findOne({_id})
         if(!comment){
-            res.status(404).send('comment not found!')
+            return res.status(404).send('comment not found!')
         }
         const blog = await Blog.findOne({_id:comment.blog});
 
         if(comment.user == req.user.id || blog.user == req.user.id){
             await Comment.findByIdAndDelete(_id);
         }else{
-            res.send("You are not allowed to delete this comment!")
+            return res.status(401).send("You are not allowed to delete this comment!")
         }
 
-        res.send("Deleted Successfully")
+        res.status(200).send()
     }
     catch(e){
         res.status(500).send(e)

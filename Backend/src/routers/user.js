@@ -11,7 +11,7 @@ router.post('/users/signup', async (req, res) => {
     try{
         await user.save();
         const token = await user.generateToken()
-        res.status(201).send({token});
+        res.status(201).send({token,user});
     }
     catch(e){
         res.status(400).send(e)
@@ -23,7 +23,7 @@ router.post('/user/login', async (req, res) => {
     try{
         const user = await User.findByCredentials(req.body.email, req.body.password);
         const token = await user.generateToken()
-        res.send({token})
+        res.send({token,user})
     }catch(e){
         res.status(400).send(e)
     }
@@ -37,7 +37,7 @@ router.post('/user/logout', auth, async (req, res) => {
         })
         await req.user.save()
 
-        res.send("logout successfully.")
+        res.status(200).send()
     }catch(e){
         res.status(500).send()
     }
@@ -103,7 +103,7 @@ router.patch('/user/me', auth, async (req, res) => {
         
         updates.forEach((update) => req.user[update] = req.body[update]);
         await req.user.save()
-        res.send(req.user)
+        res.status(200).send(req.user)
         
     }catch(e){
         res.status(400).send(e)
@@ -115,7 +115,7 @@ router.patch('/user/me', auth, async (req, res) => {
 router.delete('/user/me', auth, async (req, res) => {
     try{
         
-        await User.findByIdAndDelete(req.user._id)
+        await User.findOneAndDelete({_id:req.user._id})
 
         res.status(200).send()
     }

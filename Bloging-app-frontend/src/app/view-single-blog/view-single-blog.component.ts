@@ -12,10 +12,13 @@ export class ViewSingleBlogComponent implements OnInit,OnDestroy{
   blog={
     Title:'',
     Body:'',
-    _id:''
+    _id:'',
+    user:''
   };
   comments:any
   canComment:Boolean;
+  user = this.dataHandler.loggedinUser
+  isAuthenticated:any
   
   
   blogSub: Subscription;
@@ -28,7 +31,10 @@ export class ViewSingleBlogComponent implements OnInit,OnDestroy{
       
       this.blog = data.blog;
       this.comments = data.comments
-    
+
+      this.dataHandler.isAuthenticated.subscribe((authStatus:any) => {
+        this.isAuthenticated = authStatus;
+      })
 
     });
     this.dataHandler.canComment.subscribe(permission => {
@@ -36,8 +42,16 @@ export class ViewSingleBlogComponent implements OnInit,OnDestroy{
     })
   }
 
+  reloadComponent(){
+    this.ngOnInit()
+  }
+
   onAddComment(){
     this.dataHandler.canComment.next(!this.canComment);
+  }
+
+  onDeleteComment(id:string){
+    this.dataHandler.deleteComment(id).subscribe((res:any) => this.ngOnInit())
   }
 
   ngOnDestroy() {

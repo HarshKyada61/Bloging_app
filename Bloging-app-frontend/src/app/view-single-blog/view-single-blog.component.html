@@ -1,4 +1,4 @@
-<div class="row mt-4">
+<div class="row mt-4" >
   <div class="col-md-11 mx-auto">
     <div class="card mb-2">
       <div class="card-header">
@@ -9,16 +9,18 @@
       </div>
 
       <div class="m-2 text-end">
-        <button class="btn btn-primary" type="button" (click)="onAddComment()">Add Comment</button>
+        <button class="btn btn-primary" type="button" *ngIf="isAuthenticated" (click)="onAddComment()">Add Comment</button>
       </div>
       
-      <app-add-comment *ngIf="canComment" [blogid]="blog._id"></app-add-comment>
+      <app-add-comment *ngIf="canComment" [blogid]="blog._id" (reload)="reloadComponent()"></app-add-comment>
       
       <div class="card-footer" *ngIf="comments !== undefined && comments.length > 0">
         <h4>comments</h4>
         <div class="card m-2" *ngFor="let comment of comments">
           <div class="card-body">
-            <p>{{ comment.comment }}</p>
+            <div class="row">
+              <p class="col-11 mt-auto">{{ comment.comment }}</p>
+            <button class="btn btn-danger col-1" (click)="onDeleteComment(comment._id)" *ngIf="user===blog.user || user===comment.user">delete</button>
           </div>
         </div>
       </div>

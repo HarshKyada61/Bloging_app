@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DataStorageService } from 'src/app/shared/data-handler.service';
@@ -11,6 +11,7 @@ import { DataStorageService } from 'src/app/shared/data-handler.service';
 export class AddCommentComponent {
   @ViewChild('form') blog: NgForm;
   @Input() blogid: string;
+  @Output() reload: EventEmitter<any> = new EventEmitter();  
 
 
   
@@ -24,9 +25,9 @@ export class AddCommentComponent {
       comment: this.blog.form.value.comment
     }
     
-    this.dataHandler.addComment(token,comment).subscribe(res => {
+    this.dataHandler.addComment(comment).subscribe(res => {
       this.dataHandler.canComment.next(false);
-      this.router.navigate(['/blog/'+this.blogid])
+      this.reload.emit(null);
     })
   }
 }

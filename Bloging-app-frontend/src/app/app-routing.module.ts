@@ -12,7 +12,8 @@ const routes: Routes = [
   {path: 'blog/:id', component:ViewSingleBlogComponent},
   {path: 'profile', component:ProfileComponent},
   {path: 'auth', component:AuthComponent},
-  {path: 'blogs/addBlog', component:AddBlogComponent}
+  {path: 'blogs/addBlog', component:AddBlogComponent},
+  {path: 'blogs/update',component:AddBlogComponent}
 ];
 
 @NgModule({

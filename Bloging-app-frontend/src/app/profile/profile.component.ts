@@ -1,7 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DataStorageService } from '../shared/data-handler.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
+import { BlogService } from '../shared/blog.service';
 
 @Component({
   selector: 'app-profile',
@@ -15,27 +17,49 @@ export class ProfileComponent implements OnInit,OnDestroy {
     email: ""
   }
   blogs:any
-  token=localStorage.getItem('token')
 
-  constructor(public dataHandler: DataStorageService, public router: Router){}
+  constructor(public dataHandler: DataStorageService, public router: Router, public blogService: BlogService){}
 
   ngOnInit(){
-    this.userSub = this.dataHandler.fetchUser(this.token).subscribe((res:any) => {
+    this.userSub = this.dataHandler.fetchUser().subscribe((res:any) => {
       this.user = res.user;      
       this.blogs = res.blog
     })
   }
 
-  onDelete(){
-    console.log("in OnDelete");
-    
-    this.dataHandler.DeleteUser(this.token).subscribe(res => {
+  onDeleteProfile(){    
+    this.dataHandler.DeleteUser().subscribe(res => {
       localStorage.removeItem('token');
       this.router.navigate(['/'])
     })
   }
 
+  onUpdateProfile(updateName:any,updateEmail:any){
+    const updateduser = {
+      name:updateName.value,
+      email:updateEmail.value
+    }
+    
+    
+    this.dataHandler.updateUser(updateduser).subscribe(res => {
+      this.ngOnInit()
+    })
+  }
+
+  onDeleteBlog(id:string){    
+    this.dataHandler.deleteBlog(id).subscribe(res => {
+      this.ngOnInit()
+    })
+  }
+
+  onUpdateBlog(blog:any){
+    this.blogService.blog = blog;
+    this.router.navigate(['/blogs/update'])
+  }
+
   ngOnDestroy(): void {
     this.userSub.unsubscribe()
   }
+
+  
 }

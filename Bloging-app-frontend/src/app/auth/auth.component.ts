@@ -31,8 +31,9 @@ export class AuthComponent {
     const user = this.authForm.form.value;
     if (this.isLoginMode) {
       this.dataHandler.login(user).subscribe(
-        (token: any) => {
-          this.token = token.token;
+        (res: any) => {
+          this.dataHandler.loggedinUser = res.user._id
+          this.token = res.token;
           console.log('login Successfully');
           if (this.token) {
             this.storeToken()
@@ -44,10 +45,9 @@ export class AuthComponent {
       );
     } else {
       this.dataHandler.signup(user).subscribe(
-        (token: any) => {
-          console.log(token);
-          
-          this.token = token.token;
+        (res: any) => {
+          this.dataHandler.loggedinUser = res.user._id
+          this.token = res.token;
           console.log('signup successfully');
           if (this.token) {
            this.storeToken()

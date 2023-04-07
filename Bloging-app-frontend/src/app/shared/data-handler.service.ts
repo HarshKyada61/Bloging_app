@@ -8,6 +8,19 @@ export class DataStorageService {
     canComment = new BehaviorSubject<Boolean>(false)
     URL = 'http://localhost:3000';
     constructor(private http: HttpClient){}
+    
+    options:any;
+    setHeaders(token:any){
+        return {
+            headers: {'Authorization': token}
+        }
+    }
+    loggedinUser = null;
+   
+  
+    // options= {
+    //     headers:{'Authorization': localStorage.getItem('token')}
+    // }
 
     fetchBlogs(){
         return this.http.get(this.URL+'/blog')   
@@ -17,10 +30,19 @@ export class DataStorageService {
         return this.http.get(this.URL+'/blog/'+id)
     }
 
-    addBlog(blog:any,token:any){
-        const headers = new HttpHeaders({'Authorization': token}) 
-        const options = {headers:headers}
-        return this.http.post(this.URL+'/blog',blog,options)
+    addBlog(blog:any){
+        this.options = this.setHeaders(localStorage.getItem('token'))
+        return this.http.post(this.URL+'/blog',blog,this.options)
+    }
+
+    updateBlog(blog:any,id:any){
+        this.options = this.setHeaders(localStorage.getItem('token'))
+        return this.http.patch(this.URL+'/blog/'+id,blog,this.options)
+    }
+
+    deleteBlog(id:any){
+        this.options = this.setHeaders(localStorage.getItem('token'))
+        return this.http.delete(this.URL+'/blog/'+id,this.options)
     }
 
     login(user:any){
@@ -31,21 +53,33 @@ export class DataStorageService {
         return this.http.post(this.URL+'/users/signup', user)
     }
 
-    fetchUser(token:any){
-        const headers = new HttpHeaders({'Authorization': token}) 
-        const options = {headers:headers}
-        return this.http.get(this.URL+'/user/me',options)
+    logout(){
+        this.options = this.setHeaders(localStorage.getItem('token'))
+        return this.http.post(this.URL+'/user/logout',{},this.options)
     }
 
-    DeleteUser(token:any){
-        const headers = new HttpHeaders({'Authorization': token}) 
-        const options = {headers:headers}
-        return this.http.delete(this.URL+'/user/me',options)
+    fetchUser(){
+        this.options = this.setHeaders(localStorage.getItem('token'))
+        return this.http.get(this.URL+'/user/me',this.options)
     }
 
-    addComment(token:any,comment:any){
-        const headers = new HttpHeaders({'Authorization': token}) 
-        const options = {headers:headers}
-        return this.http.post(this.URL+'/comment',comment,options)
+    updateUser(user:any){
+        this.options = this.setHeaders(localStorage.getItem('token'))
+        return this.http.patch(this.URL+'/user/me',user,this.options)
+    }
+
+    DeleteUser(){
+        this.options = this.setHeaders(localStorage.getItem('token'))
+        return this.http.delete(this.URL+'/user/me',this.options)
+    }
+
+    addComment(comment:any){
+        this.options = this.setHeaders(localStorage.getItem('token'))
+        return this.http.post(this.URL+'/comment',comment,this.options)
+    }
+
+    deleteComment(id:any){
+        this.options = this.setHeaders(localStorage.getItem('token'))
+        return this.http.delete(this.URL+"/comment/"+id,this.options)
     }
 }
