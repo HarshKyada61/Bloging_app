@@ -28,7 +28,7 @@ import { AddCommentComponent } from './view-single-blog/add-comment/add-comment.
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

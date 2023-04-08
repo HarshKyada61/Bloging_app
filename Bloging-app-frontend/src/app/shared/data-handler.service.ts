@@ -4,7 +4,7 @@ import { BehaviorSubject } from "rxjs";
 
 @Injectable({providedIn: 'root'})
 export class DataStorageService {
-    isAuthenticated = new BehaviorSubject<Boolean>(false)
+    isAuthenticated = new BehaviorSubject<boolean>(false)
     canComment = new BehaviorSubject<Boolean>(false)
     URL = 'http://localhost:3000';
     constructor(private http: HttpClient){}
