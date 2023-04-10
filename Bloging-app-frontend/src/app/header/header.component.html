@@ -3,9 +3,9 @@
       <a class="navbar-brand" routerLink="/">Blogs App</a>
       
       <div class="d-flex">
-        <form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <a class="nav-link m-2  " type="button">Search</a>
+        <form class="d-flex"  #form="ngForm">
+          <input class="form-control me-2" type="search" placeholder="Search" ngModel name="Search" #search>
+          <a class="nav-link m-2" role="button" (click)="onSubmit(form)">Search</a>
         </form>
 
         <a class="nav-link active m-2" routerLink="/auth" *ngIf="!isAuthenticated">Login</a>

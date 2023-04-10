@@ -1,15 +1,22 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
+import { Route } from "@angular/router";
+import { BehaviorSubject, Subject, Subscription, delay, of } from "rxjs";
 
 @Injectable({providedIn: 'root'})
 export class DataStorageService {
     isAuthenticated = new BehaviorSubject<boolean>(false)
     canComment = new BehaviorSubject<Boolean>(false)
     URL = 'http://localhost:3000';
+    
+    searchItem = new BehaviorSubject<string>('');
+    timeout=86400;
+    tokenSubscription: Subscription;
+    options:any;
+    
     constructor(private http: HttpClient){}
     
-    options:any;
+    
     setHeaders(token:any){
         return {
             headers: {'Authorization': token}
@@ -22,8 +29,13 @@ export class DataStorageService {
     //     headers:{'Authorization': localStorage.getItem('token')}
     // }
 
-    fetchBlogs(){
-        return this.http.get(this.URL+'/blog')   
+    fetchBlogs(pageNO?:any){
+        if(pageNO){
+            return this.http.get(this.URL+'/blog?page='+pageNO)   
+        }
+        else{
+            return this.http.get(this.URL+'/blog')   
+        }
     }
 
     fetchBlog(id: any){
@@ -54,7 +66,12 @@ export class DataStorageService {
     }
 
     logout(){
+        
+        this.loggedinUser = null
+        this.isAuthenticated.next(false);
         this.options = this.setHeaders(localStorage.getItem('token'))
+        localStorage.removeItem('token')
+        this.tokenSubscription.unsubscribe();
         return this.http.post(this.URL+'/user/logout',{},this.options)
     }
 
@@ -81,5 +98,21 @@ export class DataStorageService {
     deleteComment(id:any){
         this.options = this.setHeaders(localStorage.getItem('token'))
         return this.http.delete(this.URL+"/comment/"+id,this.options)
+    }
+
+
+    setToken(token:any){
+        this.isAuthenticated.next(true);
+        localStorage.setItem('token', 'Bearer '+token);
+        this.setTokenExpiration(this.timeout);
+    }
+
+    setTokenExpiration(timeout:any){
+        
+        this.tokenSubscription = of(null).pipe(delay(timeout * 1000)).subscribe(res => {
+            console.log("expired");
+
+            this.logout().subscribe();
+        })
     }
 }

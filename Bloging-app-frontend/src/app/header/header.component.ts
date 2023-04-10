@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataStorageService } from '../shared/data-handler.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
@@ -8,23 +9,27 @@ import { Router } from '@angular/router';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit{
-
+  isblogs:boolean
   isAuthenticated:Boolean;
+isBlogsRoute:boolean
+
   constructor(public dataHandler: DataStorageService, public router: Router){}
 
   ngOnInit(){
     this.dataHandler.isAuthenticated.subscribe((authStatus:any) => {
       this.isAuthenticated = authStatus;
     })
+  
   }  
 
   onLogout(){
     this.dataHandler.logout().subscribe(res => {
-      localStorage.removeItem('token')
-      this.dataHandler.loggedinUser = null
-      this.dataHandler.isAuthenticated.next(false);
+      
       this.router.navigate(["/"])
     })
- 
+  }
+
+  onSubmit(form:NgForm){    
+    this.dataHandler.searchItem.next(form.value.Search);
   }
 }

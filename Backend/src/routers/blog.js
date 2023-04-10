@@ -23,15 +23,23 @@ router.post('/blog', auth, async (req, res) => {
 
 //get all blogs
 router.get('/blog', async(req, res) => {
-    const blog = await Blog.find()
+
+    const pageNo = req.query.page || 1;
+    const limitValue = 10   ;
+    const skipValue = (pageNo -1) * limitValue;
+    const blogs = await Blog.find()
+            .skip(skipValue).limit(limitValue);
+
     try{
-        res.status(201).send(blog)
+        res.status(201).send(blogs)
     }
     catch(e){
         res.status(400).send(e)
     }
 })
 
+
+        
 
 //show specific blog
 router.get('/blog/:id', async (req, res) => {

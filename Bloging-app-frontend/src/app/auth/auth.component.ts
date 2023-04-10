@@ -12,7 +12,6 @@ import { catchError, of, throwError } from 'rxjs';
 export class AuthComponent {
   @ViewChild('form') authForm: NgForm;
   isLoginMode = true;
-  isLoggedin = false;
   token=null;
   // user = {
   //   name: "",
@@ -61,9 +60,7 @@ export class AuthComponent {
   }
 
   storeToken(){
-    this.dataHandler.isAuthenticated.next(true);
-    this.isLoggedin = true;
     this.router.navigate(['/'])
-    localStorage.setItem('token', 'Bearer '+this.token);
+    this.dataHandler.setToken(this.token)
   }
 }
