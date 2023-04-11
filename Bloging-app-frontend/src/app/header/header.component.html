@@ -1,9 +1,9 @@
 <nav class="navbar bg-secondary navbar-expand-lg ">
     <div class="container-fluid ">
-      <a class="navbar-brand" routerLink="/">Blogs App</a>
+      <a class="navbar-brand" routerLink="/blogs">Blogs App</a>
       
       <div class="d-flex">
-        <form class="d-flex"  #form="ngForm">
+        <form class="d-flex"  #form="ngForm" *ngIf="isBlogsRoute">
           <input class="form-control me-2" type="search" placeholder="Search" ngModel name="Search" #search>
           <a class="nav-link m-2" role="button" (click)="onSubmit(form)">Search</a>
         </form>

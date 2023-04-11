@@ -11,15 +11,18 @@ import { NgForm } from '@angular/forms';
 export class HeaderComponent implements OnInit{
   isblogs:boolean
   isAuthenticated:Boolean;
-isBlogsRoute:boolean
+  isBlogsRoute:boolean
 
-  constructor(public dataHandler: DataStorageService, public router: Router){}
+  constructor(public dataHandler: DataStorageService, public router: Router,private route:ActivatedRoute){}
 
   ngOnInit(){
     this.dataHandler.isAuthenticated.subscribe((authStatus:any) => {
       this.isAuthenticated = authStatus;
     })
-  
+    this.dataHandler.isBlogs.subscribe(isblog => {
+      this.isBlogsRoute = isblog;
+      
+    })
   }  
 
   onLogout(){
@@ -31,5 +34,6 @@ isBlogsRoute:boolean
 
   onSubmit(form:NgForm){    
     this.dataHandler.searchItem.next(form.value.Search);
+    this.router.navigate(['/'])
   }
 }

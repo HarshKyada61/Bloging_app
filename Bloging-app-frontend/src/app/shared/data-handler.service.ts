@@ -13,6 +13,7 @@ export class DataStorageService {
     timeout=86400;
     tokenSubscription: Subscription;
     options:any;
+    isBlogs=new BehaviorSubject<boolean>(false);
     
     constructor(private http: HttpClient){}
     
@@ -71,7 +72,9 @@ export class DataStorageService {
         this.isAuthenticated.next(false);
         this.options = this.setHeaders(localStorage.getItem('token'))
         localStorage.removeItem('token')
-        this.tokenSubscription.unsubscribe();
+        if(this.tokenSubscription){
+            this.tokenSubscription.unsubscribe();
+        }
         return this.http.post(this.URL+'/user/logout',{},this.options)
     }
 

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DataStorageService } from '../shared/data-handler.service';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { Blog } from '../blog';
 
 @Component({
@@ -11,20 +11,22 @@ import { Blog } from '../blog';
 export class ViewBlogsComponent implements OnInit, OnDestroy {
   blogs: any;
   blogsSub: Subscription;
-  filteredBlogs:any;
+  initialBlogs:any;
+  isBlogChanged = new BehaviorSubject<boolean>(false)
+  searchSub : Subscription;
   constructor(public dataHandler: DataStorageService) {}
 
   ngOnInit() {
     this.blogsSub = this.dataHandler.fetchBlogs().subscribe((blogs: any) => {
       this.blogs = blogs;
-      this.filteredBlogs = this.blogs
+      this.initialBlogs = this.blogs
     });
 
     let pageNO = 1;
     window.addEventListener('scroll', () => {
       const { scrollTop, scrollHeight, clientHeight } =
         document.documentElement;
-        // console.log(scrollTop+clientHeight,scrollHeight);
+
         
       if (scrollTop + clientHeight >= scrollHeight - 5) {
         
@@ -33,23 +35,57 @@ export class ViewBlogsComponent implements OnInit, OnDestroy {
           .fetchBlogs(pageNO)
           .subscribe((blogs: any) => {
             this.blogs = [...this.blogs, ...blogs];
-            this.filteredBlogs = this.blogs
+            this.initialBlogs = this.blogs
+            this.isBlogChanged.next(true)
           });
       }
     });
 
-    this.dataHandler.searchItem.subscribe(search => {
+    
+
+    
+
+    this.searchSub = this.dataHandler.searchItem.subscribe(search => {
       if (search !== '') {
-        this.filteredBlogs = this.blogs.filter((blog: any) => {
+
+        this.blogs = this.initialBlogs.filter((blog: any) => {
           return blog.Title.toLowerCase().includes(search.toLowerCase());
         });
+
+        
+        
+
+        if(this.blogs.length< 5){
+          
+          this.blogs = this.initialBlogs
+          pageNO += 1;
+          this.blogsSub = this.dataHandler
+            .fetchBlogs(pageNO)
+            .subscribe((blogs: any) => {
+              this.blogs = [...this.blogs, ...blogs];
+              this.initialBlogs = this.blogs
+              this.isBlogChanged.next(true)
+            });
+        }
+
+        this.isBlogChanged.subscribe(ischanged => {
+          if(ischanged){
+            this.blogs = this.initialBlogs.filter((blog: any) => {
+              return blog.Title.toLowerCase().includes(search.toLowerCase());
+            });
+            this.isBlogChanged.next(false)
+          }
+        })
+        
       }
       else{
-        this.filteredBlogs = this.blogs
+        this.blogs = this.initialBlogs
       }
     });
+
   }
   ngOnDestroy() {
     this.blogsSub.unsubscribe();
+    this.dataHandler.searchItem.next('');
   }
 }

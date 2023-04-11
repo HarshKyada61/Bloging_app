@@ -2,3 +2,8 @@ a{
     text-decoration: none;
     color: black;
 }
+.blogBody {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 45px;
+  }
